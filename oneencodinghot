@@ -1,0 +1,38 @@
+import pandas as pd
+import numpy as np
+
+def ordinal_encode(dataframe, column, categories):
+  
+#index to index mapping
+    category_mapping = {category: idx for idx, category in enumerate(categories)}
+    
+    dataframe[column + '_encoded'] = dataframe[column].map(category_mapping)
+    
+    return dataframe
+
+def one_hot_encode(dataframe, column):
+   
+    unique_categories = dataframe[column].unique()
+    
+   
+    for category in unique_categories:
+        dataframe[column + '_' + category] = np.where(dataframe[column] == category, 1, 0)
+    
+    return dataframe
+
+
+if __name__ == "__main__":
+
+    data = {
+        'education': ['High School', 'Bachelor\'s', 'Master\'s', 'High School', 'Master\'s'],
+        'color': ['Red', 'Green', 'Blue', 'Green', 'Red']
+    }
+    df = pd.DataFrame(data)
+
+    education_categories = ['High School', 'Bachelor\'s', 'Master\'s']
+
+    encoded_df = ordinal_encode(df, 'education', education_categories)
+
+    encoded_df = one_hot_encode(encoded_df, 'color')
+
+    print(encoded_df)
